@@ -1,4 +1,4 @@
-# Quickbox autodl irsi plex extension
+# Quickbox autodl irssi plex extension
 
 dashboard index.php location [/srv/rutorrent/home]
 
