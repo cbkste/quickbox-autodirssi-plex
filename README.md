@@ -7,7 +7,7 @@ install script location [/usr/local/bin/quickbox/package/install/]
 
 ## How to install
 
-1. Update the current index.php located within dashboard location with the new autodl widget located.
+1. Update the current index.php located within dashboard location with the new autodl widget.
 2. Update package_data.php located within dashboard location with the new shell exec code for addtoplex.
 3. copy the installpackage script within the install script location.
 4. Restart apache 2 server
