@@ -1,21 +1,22 @@
 #!/bin/bash
 #
-# Script to add add torrent file to plex
+# Script to add torrent file to plex
+
 OUTTO=/srv/rutorrent/home/db/output.log
 TORRENTLOCATION=/mnt/torrents
-PLEXLOCATION=/mnt/Plex/Movies
+PLEXMOVIELOCATION=/mnt/Plex/Movies
+PLEXTVLOCATION=/mnt/Plex/Tv\ Shows
+
+MOVELOCATION=''
 
 function _mvfile {
 declare -i count=$1
-#let count--
         echo $count
         content=$(sed -n "$count"'p' /home/mod/.autodl/DownloadHistory.txt)
-        echo "$content"
         location=$(echo "$content" | grep -o -P '^(.+?(?=[0-9]{13}))')
+        decideIfMovieOrTvShow "$location"
         location=${location// /.}
         fullLocation=$TORRENTLOCATION"/"$location
-        echo $location
-        echo $fullLocation
         echo "Moving File '$location' to Plex Folder " >>"${OUTTO}" 2>&1;
         cd $fullLocation
 
@@ -29,7 +30,6 @@ if [ ${#myarray[@]} -gt 0 ]; then
     echo "${OUTPUT}" >>"${OUTTO}" 2>&1;
     echo >>"${OUTTO}" 2>&1;
     echo "File Extracted, Moving to Plex Folder" >>"${OUTTO}" 2>&1;
-    newLocation=$PLEXLOCATION"/"$mkvFile
     checkForFileCopyAndMove "mv"
     echo "File Moved, Go check Plex. Close and Refresh" >>"${OUTTO}" 2>&1;
 else
@@ -79,19 +79,19 @@ fi
 
 case $FOUNDFILE in
      mkv)
-          eval "$1 "$mkvFile" $PLEXLOCATION"
+          eval "$1 "$mkvFile" $MOVELOCATION"
           echo "mkv"
           ;;
      mp4)
-          eval "$1 "$mp4File" $PLEXLOCATION"
+          eval "$1 "$mp4File" $MOVELOCATION"
           echo "mp4"
           ;;
      wmv)
-          eval "$1 "$wmvFile" $PLEXLOCATION"
+          eval "$1 "$wmvFile" $MOVELOCATION"
           echo "wmv"
           ;;
      avi)
-          eval "$1 "$aviFile" $PLEXLOCATION"
+          eval "$1 "$aviFile" $MOVELOCATION"
           echo "avi"
          ;;
      *)
@@ -101,6 +101,20 @@ esac
 
     echo >>"${OUTTO}" 2>&1;
     echo "Moved to Plex Folder, Go check Plex. Close and Refresh" >>"${OUTTO}" 2>&1;
+}
+
+function decideIfMovieOrTvShow {
+    MOVELOCATION=$PLEXMOVIELOCATION
+    filename=/usr/local/bin/quickbox/package/extensions/tvshowdata.txt
+    while read -r line; do
+        name="$line"
+        echo $name
+        if [[ "$1" == *"$name"* ]]; then
+            MOVELOCATION=$PLEXTVLOCATION
+        fi
+    done < "$filename"
+
+    echo $MOVELOCATION
 }
 
 _mvfile $1
