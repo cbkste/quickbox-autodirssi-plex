@@ -1,5 +1,7 @@
 # Quickbox autodl irssi plex extension
 
+<img src="images/image1.png" class="inline"/>
+
 dashboard index.php location [/srv/rutorrent/home]
 
 install script location [/usr/local/bin/quickbox/package/install/]
