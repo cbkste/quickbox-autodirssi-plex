@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Script to add torrent file to plex
+# script to add torrent file to plex
 
 OUTTO=/srv/rutorrent/home/db/output.log
 TORRENTLOCATION=/mnt/torrents
 PLEXMOVIELOCATION=/mnt/Plex/Movies
-PLEXTVLOCATION=/mnt/Plex/Tv\ Shows
+PLEXTVLOCATION='/mnt/Plex/Tv Shows'
 
 MOVELOCATION=''
 
@@ -76,22 +76,22 @@ else
    return 1
 fi
 
-
+echo $MOVELOCATION >>"${OUTTO}" 2>&1;
 case $FOUNDFILE in
      mkv)
-          eval "$1 "$mkvFile" $MOVELOCATION"
+          eval "$1 "$mkvFile" '$MOVELOCATION'"
           echo "mkv"
           ;;
      mp4)
-          eval "$1 "$mp4File" $MOVELOCATION"
+          eval "$1 "$mp4File" '$MOVELOCATION'"
           echo "mp4"
           ;;
      wmv)
-          eval "$1 "$wmvFile" $MOVELOCATION"
+          eval "$1 "$wmvFile" '$MOVELOCATION'"
           echo "wmv"
           ;;
      avi)
-          eval "$1 "$aviFile" $MOVELOCATION"
+          eval "$1 "$aviFile" '$MOVELOCATION'"
           echo "avi"
          ;;
      *)
@@ -105,16 +105,15 @@ esac
 
 function decideIfMovieOrTvShow {
     MOVELOCATION=$PLEXMOVIELOCATION
+
     filename=/usr/local/bin/quickbox/package/extensions/tvshowdata.txt
     while read -r line; do
         name="$line"
         echo $name
         if [[ "$1" == *"$name"* ]]; then
-            MOVELOCATION=$PLEXTVLOCATION
+            MOVELOCATION="$PLEXTVLOCATION"
         fi
     done < "$filename"
-
-    echo $MOVELOCATION
 }
 
 _mvfile $1
