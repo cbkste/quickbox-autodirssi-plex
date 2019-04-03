@@ -21,5 +21,4 @@ foo@bar:~$/etc/init.d/apache2 restart
 
 ## Todo
 
-1. Add tv automove option
-2. Add install script
+1. Add install script
